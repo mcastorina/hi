@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'hi'
+
+highlighter = Hi::Highlighter.new(:red, ARGV)
+STDOUT.write(highlighter.highlight(STDIN.read))
