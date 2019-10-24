@@ -5,13 +5,17 @@ module Hi
   class Error < StandardError; end
 
   class Highlighter
-    def initialize(color, words)
+    def initialize(color)
+      if !String.colors.include? color.to_sym
+        raise "I don't have that color"
+      end
       @color = color
-      @words = words
     end
-    def highlight(text)
-      @words.each do |word|
-        text.gsub! word, word.bold.send(@color)
+    def highlight(text, words)
+      words.each do |word|
+        text.scan(word).each do |match|
+          text.gsub! match, match.bold.send(@color)
+        end
       end
       return text
     end

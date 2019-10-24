@@ -2,5 +2,5 @@
 
 require 'hi'
 
-highlighter = Hi::Highlighter.new(:red, ARGV)
-STDOUT.write(highlighter.highlight(STDIN.read))
+highlighter = Hi::Highlighter.new(:red)
+STDOUT.write(highlighter.highlight(STDIN.read, ARGV.map! {|x| Regexp.new x}))
