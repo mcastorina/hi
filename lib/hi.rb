@@ -11,14 +11,47 @@ module Hi
       end
       @color = color
     end
-    def highlight(text, words)
+
+    def highlight(string, words)
+      # find the start / end index of each word
+      ranges = []
       words.each do |word|
-        text.scan(word).each do |match|
-          text.gsub! match, match.bold.send(@color)
+        ranges += string.enum_for(:scan, word).map do
+          Regexp.last_match.begin(0) ... Regexp.last_match.end(0)
         end
       end
-      return text
+
+      # join into as many continuous ranges
+      ranges.sort!
+      combined_ranges = [ranges[0]]
+      ranges[1...].each do |range|
+        combined_ranges[-1...] = join(combined_ranges[-1], range)
+      end
+
+      # iterate in reverse order and replace
+      new_string = string.dup
+      combined_ranges.reverse_each do |range|
+        highlight_range!(new_string, range)
+      end
+      return new_string
+    end
+
+    # join two ranges
+    def join(r1, r2)
+      return [r1, r2] if r2.begin > r1.end
+      return [ r1.begin ... [r1.end, r2.end].max ]
+    end
+
+    def highlight_range!(string, range)
+      string[range] = string[range].bold.send(@color)
     end
   end
 
+end
+
+class Range
+  include Comparable
+  def <=>(other)
+    self.begin <=> other.begin
+  end
 end

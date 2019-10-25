@@ -11,22 +11,38 @@ class HiTest < Minitest::Test
 
   def test_it_highlights
     text = "hello world"
-    assert_equal @highlighter.highlight(text, ["hello"]), "#{"hello".bold.red} world"
+    assert_equal @highlighter.highlight(text, ["hello"]),
+      "#{"hello".bold.red} world"
   end
 
   def test_it_highlights_multiple_lines
     text = "hello world\nfoo bar baz"
-    assert_equal @highlighter.highlight(text, ["hello", "foo"]), "#{"hello".bold.red} world\n#{"foo".bold.red} bar baz"
+    assert_equal @highlighter.highlight(text, ["hello", "foo"]),
+      "#{"hello".bold.red} world\n#{"foo".bold.red} bar baz"
   end
 
   def test_it_highlights_regex
     text = "foo bar baz"
-    assert_equal @highlighter.highlight(text, [/f../]), "#{"foo".bold.red} bar baz"
+    assert_equal @highlighter.highlight(text, [/f../]),
+      "#{"foo".bold.red} bar baz"
   end
 
   def test_it_highlights_multiple_regex
     text = "hello world"
-    assert_equal @highlighter.highlight(text, [/.o/]), "hel#{"lo".bold.red} #{"wo".bold.red}rld"
+    assert_equal @highlighter.highlight(text, [/.o/]),
+      "hel#{"lo".bold.red} #{"wo".bold.red}rld"
+  end
+
+  def test_it_highlights_once
+    text = "foo bar baz"
+    assert_equal @highlighter.highlight(text, ["bar", "ar"]),
+      "foo #{"bar".bold.red} baz"
+  end
+
+  def test_it_highlights_all_lines
+    text = "hello world\nfoo bar baz"
+    assert_equal @highlighter.highlight(text, [/./]),
+      "#{"hello world".bold.red}\n#{"foo bar baz".bold.red}"
   end
 
   def test_it_fails_unknown_colors
