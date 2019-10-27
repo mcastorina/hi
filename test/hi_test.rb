@@ -45,6 +45,11 @@ class HiTest < Minitest::Test
       "#{"hello world".bold.red}\n#{"foo bar baz".bold.red}"
   end
 
+  def test_it_does_not_highlight
+    text = "hello world\nfoo bar baz"
+    assert_equal @highlighter.highlight(text, ['donuts']), text
+  end
+
   def test_it_fails_unknown_colors
     assert_raises RuntimeError do
       Hi::Highlighter.new(:neon_brown)

@@ -20,6 +20,7 @@ module Hi
           Regexp.last_match.begin(0) ... Regexp.last_match.end(0)
         end
       end
+      return string if ranges.length == 0
 
       # join into as many continuous ranges
       ranges.sort!
