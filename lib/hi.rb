@@ -46,8 +46,12 @@ module Hi
     def highlight_range!(string, range)
       string[range] = string[range].bold.send(@color)
     end
-  end
 
+    def self.colors
+      String.colors.reject { |x| x == :default }
+    end
+
+  end
 end
 
 class Range

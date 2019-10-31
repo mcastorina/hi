@@ -1,6 +1,31 @@
 #!/usr/bin/env ruby
 
 require 'hi'
+require 'optparse'
 
-highlighter = Hi::Highlighter.new(:red)
-STDOUT.write(highlighter.highlight(STDIN.read, ARGV.map! {|x| Regexp.new x}))
+params = {
+  color: 'red',
+  'list-colors': false,
+}
+
+OptionParser.new do |opts|
+  opts.on("-c", "--color COLOR", "Color to highlight with")
+  opts.on("-l", "--list-colors", "List the colors I have")
+end.parse! into: params
+
+if params[:'list-colors']
+  Hi::Highlighter.colors.grep(/^light_/).each do |color|
+    highlighter = Hi::Highlighter.new(color)
+    display = color.to_s.split('_')[1]
+    puts highlighter.highlight(display, [display])
+  end
+  exit 0
+end
+
+begin
+  highlighter = Hi::Highlighter.new(('light_' + params[:color]).to_sym)
+  STDOUT.write(highlighter.highlight(STDIN.read, ARGV.map! {|x| Regexp.new x}))
+rescue StandardError => e
+  STDERR.write "error: #{e.message}\n"
+  exit 1
+end
