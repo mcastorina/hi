@@ -8,10 +8,15 @@ params = {
   'list-colors': false,
 }
 
-OptionParser.new do |opts|
-  opts.on("-c", "--color COLOR", "Color to highlight with")
-  opts.on("-l", "--list-colors", "List the colors I have")
-end.parse! into: params
+begin
+  OptionParser.new do |opts|
+    opts.on("-c", "--color COLOR", "Color to highlight with")
+    opts.on("-l", "--list-colors", "List the colors I have")
+  end.parse! into: params
+rescue StandardError => e
+  STDERR.write "error: #{e.message}\n"
+  exit 1
+end
 
 if params[:'list-colors']
   Hi::Highlighter.colors.grep(/^light_/).each do |color|
