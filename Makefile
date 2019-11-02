@@ -17,3 +17,7 @@ install: $(GEMFILE)
 .PHONY: test
 test:
 	$(RAKE) test
+
+.PHONY: bench
+bench:
+	BENCH=true $(RAKE) test
